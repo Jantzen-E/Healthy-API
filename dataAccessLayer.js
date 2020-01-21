@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-
+const ObjectId = require("mongodb").ObjectId;
 require('dotenv').config();
 
 const databaseName = 'healthy-items-db';
@@ -45,23 +45,40 @@ const Insert = function(item) {
 };
 
 const Find = function(item) {
+    let query = {
+        objectQuery: {},
+        sort: {},
+    };
+    const options = {};
 
-    let productQuery = {};
+    if (options) {
+        if(options.filterBy && options.filterByValue) {
+            query.objectQuery[options.filterBy] = { $regex: `.*${options.filterByValue}.*`, $options: 'i' };
+        }
 
-    if(item) {
-        productQuery = item;
+        if(options.orderBy && options.orderByValue) {
+            query.sort[options.filterBy] = (options.orderByValue === 'asc' ? 1 : -1);
+        }
+    }
+
+    if (item) {
+        query = item;
     }
 
     return new Promise((resolve, reject) => {
         const productCollection = database.collection(collectionName);
-        productCollection.find(productQuery).toArray(function(err, res) {
-            if(err) {
-                reject(err);
-            }
-            else {
-                console.log('successfully found items');
-                resolve(res);
-            }
+
+        productCollection
+            .find(query.objectQuery)
+            .sort(query.sort)
+            .toArray(function(err, res) {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                    console.log('successfully found items');
+                }
         });
     });
 };
