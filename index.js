@@ -12,19 +12,17 @@ app.use(cors());
 DAL.Connect();
 
 // Endpoints
-app.get('/api/items', async(req, res) => {
-    // const options = {};
-    const result = await DAL.Find();
-    
+app.get('/api/items', async (req, res) => {
+    const options = {};
     const query = req.query;
     
-    if(query['filterBy']) {
-        options['filterBy'] = query['filterBy'];
+    if(query['q']) {
+        options['q'] = query['q'];
     }
 
-    if(query['filterByValue']) {
-        options['filterByValue'] = query['filterByValue'];
-    }
+    // if(query['filterByValue']) {
+    //     options['filterByValue'] = query['filterByValue'];
+    // }
 
     if(query['orderBy']) {
         options['orderBy'] = query['orderBy'];
@@ -34,15 +32,17 @@ app.get('/api/items', async(req, res) => {
         options['orderByValue'] = query['orderByValue'];
     }
 
+    const result = await DAL.Find(options);
+
     if (result) {
-        res.sendStatus(200).send('The resources have been successfully fetched')
+        res.status(200).send(result);
     }
     else {
-        res.sendStatus(400).send('items not found');
+        res.status(400).send('items not found');
     }
 });
 
-app.get('/api/items:id', async(req, res) => {
+app.get('/api/items/:id', async(req, res) => {
     const id = req.params.id;
 
     const item = {
@@ -52,10 +52,10 @@ app.get('/api/items:id', async(req, res) => {
     const result = await DAL.Find(item);
 
     if (result) {
-        res.sendStatus(200).send('The resource has been successfully fetched');
+        res.status(200).send('The resource has been successfully fetched');
     }
     else {
-        res.sendStatus(400).send('No item with ID: ' + id + ' found!');
+        res.status(400).send('No item with ID: ' + id + ' found!');
     }
 });
 
@@ -67,10 +67,10 @@ app.delete('/api/items/:id', async(req, res) => {
     const result = await DAL.Remove(item);
 
     if (result) {
-        res.sendStatus(200).send('item was successfully deleted');
+        res.status(200).send('item was successfully deleted');
     }
     else {
-        res.sendStatus(400).send('item was not successfully deleted');
+        res.status(400).send('item was not successfully deleted');
     }
 });
 
@@ -84,57 +84,57 @@ app.put('/api/items/:id', async(req, res) => {
     const result = await DAL.Update(item, updatedItem);
     
     if (result) {
-        res.sendStatus(200).send('item was successfully updated');
+        res.status(200).send('item was successfully updated');
     }
     else {
-        res.sendStatus(400).send('item was not successfully updated');
+        res.status(400).send('item was not successfully updated');
     }
 });
 
 app.post('/api/items', async(req, res) => {
-    const item = req.body;
+    const body = req.body;
 
     if (!body.imgUrl) {
-        res.sendStatus(400).send('image URL field is missing')
+        res.status(400).send('image URL field is missing')
         return;
     }
 
     if (!body.name) {
-        res.sendStatus(400).send('name of item is missing')
+        res.status(400).send('name of item is missing')
         return;
     }
 
     if (!body.benefits) {
-        res.sendStatus(400).send('benefits field is missing')
+        res.status(400).send('benefits field is missing')
         return;
     }
 
     if (!body.uses) {
-        res.sendStatus(400).send('uses field is missing')
+        res.status(400).send('uses field is missing')
         return;
     }
 
     if (!body.sideEffects) {
-        res.sendStatus(400).send('side effects field is missing')
+        res.status(400).send('side effects field is missing')
         return;
     }
 
     //validate field exists
     const cleanData = {
-        imgUrl: item.imgUrl,
-        name: item.name,
-        benefits: item.benefits,
-        uses: item.uses,
-        sideEffects: item.sideEffects
+        imgUrl: body.imgUrl,
+        name: body.name,
+        benefits: body.benefits,
+        uses: body.uses,
+        sideEffects: body.sideEffects
     };
 
-    const result = await DAL.Insert(item);
-    res.sendStatus(201).send('item created successfully');
+    await DAL.Insert(body);
+    res.status(201).send('item created successfully');
 });
     //TODO: validate request (required fields, min length, is number)
-    // res.sendStatus(400).send('error message')
+    // res.status(400).send('error message')
 
-    // if validation fails, res.sendStatus(400).send('name field is missing') or category doesn't exist,
+    // if validation fails, res.status(400).send('name field is missing') or category doesn't exist,
 
     // Sanitize data
 

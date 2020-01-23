@@ -44,25 +44,20 @@ const Insert = function(item) {
     });
 };
 
-const Find = function(item) {
+const Find = function(options = {}) {
     let query = {
         objectQuery: {},
         sort: {},
     };
-    const options = {};
 
-    if (options) {
-        if(options.filterBy && options.filterByValue) {
-            query.objectQuery[options.filterBy] = { $regex: `.*${options.filterByValue}.*`, $options: 'i' };
+    if (Object.keys(options).length > 0) {
+        if(options.q) {
+            query.objectQuery.name = { $regex: `.*${options.q}.*`, $options: 'i' };
         }
 
         if(options.orderBy && options.orderByValue) {
-            query.sort[options.filterBy] = (options.orderByValue === 'asc' ? 1 : -1);
+            query.sort[options.orderBy] = (options.orderByValue === 'asc' ? -1 : 1);
         }
-    }
-
-    if (item) {
-        query = item;
     }
 
     return new Promise((resolve, reject) => {
