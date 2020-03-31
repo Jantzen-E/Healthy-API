@@ -52,7 +52,7 @@ app.get('/api/items/:id', async(req, res) => {
     const result = await DAL.Find(item);
 
     if (result) {
-        res.status(200).send('The resource has been successfully fetched');
+        res.status(200).send(result);
     }
     else {
         res.status(400).send('No item with ID: ' + id + ' found!');
@@ -67,7 +67,7 @@ app.delete('/api/items/:id', async(req, res) => {
     const result = await DAL.Remove(item);
 
     if (result) {
-        res.status(200).send('item was successfully deleted');
+        res.status(200).send(result);
     }
     else {
         res.status(400).send('item was not successfully deleted');
@@ -84,7 +84,7 @@ app.put('/api/items/:id', async(req, res) => {
     const result = await DAL.Update(item, updatedItem);
     
     if (result) {
-        res.status(200).send('item was successfully updated');
+        res.status(200).send(result);
     }
     else {
         res.status(400).send('item was not successfully updated');
@@ -128,8 +128,8 @@ app.post('/api/items', async(req, res) => {
         sideEffects: body.sideEffects
     };
 
-    await DAL.Insert(body);
-    res.status(201).send('item created successfully');
+    let result = await DAL.Insert(body);
+    res.status(201).send(result);
 });
     //TODO: validate request (required fields, min length, is number)
     // res.status(400).send('error message')
