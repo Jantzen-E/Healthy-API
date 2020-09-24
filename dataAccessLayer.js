@@ -93,6 +93,21 @@ const Update = function(item, newItem) {
     });
 };
 
+const Patch = function(item, newItem) {
+    return new Promise((resolve, reject) => {
+        const productCollection = database.collection(collectionName);
+        productCollection.updateOne(item, newItem, function(err, res) {
+            if(err) {
+                reject(err);
+            }
+            else {
+                console.log('successfully updated property');
+                resolve(res);
+            }
+        });
+    });
+};
+
 const Remove = function(item) {
     return new Promise((resolve, reject) => {
         const productCollection = database.collection(collectionName);
@@ -108,4 +123,4 @@ const Remove = function(item) {
     });
 };
 
-module.exports = { Connect, Insert, Find, Update, Remove };
+module.exports = { Connect, Insert, Find, Update, Patch, Remove };

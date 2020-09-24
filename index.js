@@ -91,6 +91,23 @@ app.put('/api/items/:id', async(req, res) => {
     }
 });
 
+app.patch('/api/items/:id', async(req, res) => {
+    const id = req.params.id;
+    const item = {
+        _id: ObjectId(id)
+    };
+    const newItem = req.body;
+    const patchedItem = { $set: newItem};
+    const result = await DAL.Update(item, patchedItem);
+
+    if (result) {
+        res.status(200).send(result);
+    }
+    else {
+        res.status(400).send('property was not successfully updated');
+    }
+});
+
 app.post('/api/items', async(req, res) => {
     const body = req.body;
 
