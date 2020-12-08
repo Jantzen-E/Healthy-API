@@ -6,7 +6,6 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT; 
 const cors = require('cors');
-//add our data access layer file
 app.use(bodyParser.json());
 app.use(cors());
 DAL.Connect();
@@ -19,10 +18,6 @@ app.get('/api/items', async (req, res) => {
     if(query['q']) {
         options['q'] = query['q'];
     }
-
-    // if(query['filterByValue']) {
-    //     options['filterByValue'] = query['filterByValue'];
-    // }
 
     if(query['orderBy']) {
         options['orderBy'] = query['orderBy'];
@@ -91,23 +86,6 @@ app.put('/api/items/:id', async(req, res) => {
     }
 });
 
-// app.patch('/api/items/:id', async(req, res) => {
-//     const id = req.params.id;
-//     const item = {
-//         _id: ObjectId(id)
-//     };
-//     const newItem = req.body;
-//     const patchedItem = { $set: newItem};
-//     const result = await DAL.Update(item, patchedItem);
-
-//     if (result) {
-//         res.status(200).send(result);
-//     }
-//     else {
-//         res.status(400).send('property was not successfully updated');
-//     }
-// });
-
 app.post('/api/items', async(req, res) => {
     const body = req.body;
 
@@ -135,8 +113,7 @@ app.post('/api/items', async(req, res) => {
         res.status(400).send('side effects field is missing')
         return;
     }
-    
-    //validate field exists
+
     const cleanData = {
         imgUrl: body.imgUrl,
         name: body.name,
@@ -148,17 +125,8 @@ app.post('/api/items', async(req, res) => {
     let result = await DAL.Insert(body);
     res.status(201).send(result);
 });
-    //TODO: validate request (required fields, min length, is number)
-    // res.status(400).send('error message')
-    // if validation fails, res.status(400).send('name field is missing') or category doesn't exist,
-    // Sanitize data
-    //TODO: insert into database
-    //await DAL.insert(cleanData);
-    //TODO: send back correct status codes and useful error messages
-//TODO: add a put/patch endpoint
 
 app.listen(port, () => {
     console.log('Server started!!');
-
     console.log(`MONGODB_CONNECTION_STRING: ${process.env.MONGODB_CONNECTION_STRING}`);
 });

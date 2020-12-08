@@ -1,12 +1,9 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require("mongodb").ObjectId;
 require('dotenv').config();
-
 const databaseName = 'healthy-items-db';
 const collectionName = 'items';
-
 const mongoDbUrl = process.env.MONGODB_CONNECTION_STRING;
-// const mongoDbUrl = 'gdfgdfgdfgfgd';
 const settings = {
     useUnifiedTopology: true
 };
@@ -92,21 +89,6 @@ const Update = function(item, newItem) {
         });
     });
 };
-
-// const Patch = function(item, newItem) {
-//     return new Promise((resolve, reject) => {
-//         const productCollection = database.collection(collectionName);
-//         productCollection.updateOne(item, newItem, function(err, res) {
-//             if(err) {
-//                 reject(err);
-//             }
-//             else {
-//                 console.log('successfully updated property');
-//                 resolve(res);
-//             }
-//         });
-//     });
-// };
 
 const Remove = function(item) {
     return new Promise((resolve, reject) => {
