@@ -135,7 +135,7 @@ app.post('/api/items', async(req, res) => {
         res.status(400).send('side effects field is missing')
         return;
     }
-
+    
     //validate field exists
     const cleanData = {
         imgUrl: body.imgUrl,
@@ -150,21 +150,13 @@ app.post('/api/items', async(req, res) => {
 });
     //TODO: validate request (required fields, min length, is number)
     // res.status(400).send('error message')
-
     // if validation fails, res.status(400).send('name field is missing') or category doesn't exist,
-
     // Sanitize data
-
-
     //TODO: insert into database
     //await DAL.insert(cleanData);
-
     //TODO: send back correct status codes and useful error messages
-
-
 //TODO: add a put/patch endpoint
 
-//TODO: add a delete endpoint
 app.listen(port, () => {
     console.log('Server started!!');
 
