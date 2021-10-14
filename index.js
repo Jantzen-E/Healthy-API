@@ -1,12 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const DAL = require('./dataAccessLayer');
 const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT; 
 const cors = require('cors');
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(cors());
 DAL.Connect();
 
